@@ -38,3 +38,19 @@
 至此我解决了go语言的环境
 
 2、但这样我发现他还是无法监听到消息，明明事件上报的端口就是8080，我listen的也是8080，为什么听不到呢？questioning
+
+3、一些笔记
+
+postform貌似是后面的无法通过命令进行改变
+而query则是可以通过post命令改变的值
+如果在前面加一个Default，那么你的语句里要有一个“，”，如果是postform则一直是后面那个值恒定
+而如果是query，那么没读入就是“，”后面那个，读入了就是读入的
+
+一个非常好的[学习gin框架](https://www.cnblogs.com/-beyond/p/9391892.html)的网页
+
+get是从浏览器上访问就行
+而post需要发一个post
+
+ShouldBindQuery(&json)//GET请求
+ShouldBind(&json)//POST请求
+
