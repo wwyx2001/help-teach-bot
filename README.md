@@ -19,14 +19,22 @@
 
 ## Day3
 1、我在网上找了一个简单的用json接受应答消息的.go程序，发现用的是MVC架构，于是乎对MVC框架进行了解；然后可以通过goland给coolq发送指令使其send message
+
 2、打算使用gin框架所以对gin框架的用法进行学习
+
 3、搜索资料打算把go project跑在服务器上
 
 ## Day4
 1、打算把go project跑在服务器上，故在服务器上[安装go语言环境](https://www.runoob.com/go/go-environment.html)，还有[这个资料](https://golang.google.cn/doc/install?download=go1.14.linux-amd64.tar.gz)，然后是[把golang项目部署到Linux服务器上](https://blog.csdn.net/qq_33230584/article/details/81536572)，这其中有一步是将该文件放入linux系统某个文件夹下
+
 查询应该使用的命令是: scp local_file username@userip:remote_folder
+
 我在本地cmd使用了命令：scp F:\helpteachbot\main ubuntu:175.24.41.84:/usr/local
+
 但这样给我报无权限错误，我查询资料发现可以转移到别的文件夹下，然后再mv过去
+
 所以我最后使用的命令是：scp F:\helpteachbot\main ubuntu:175.24.41.84:/tmp
+
 至此我解决了go语言的环境
+
 2、但这样我发现他还是无法监听到消息，明明事件上报的端口就是8080，我listen的也是8080，为什么听不到呢？questioning
