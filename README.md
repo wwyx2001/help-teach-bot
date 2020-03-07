@@ -65,3 +65,8 @@ ShouldBind(&json)//POST请求
 不过也不算是闲着了，大概码了一下层次二的代码，数据库打算用MongoDB，但还没下载下来
 
 ## Day6
+今天本来打算在Linux上安装MongoDB，可是出bug，用尽所有方法也解决不了
+
+于是，我用[docker安装了MongoDB](https://www.runoob.com/docker/docker-install-mongodb.html)，不出几分钟就安好了（所以我真是ZZ啊！！！！
+
+今晚码完层二！
