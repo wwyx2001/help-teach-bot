@@ -29,11 +29,11 @@
 
 查询应该使用的命令是: scp local_file username@userip:remote_folder
 
-我在本地cmd使用了命令：scp F:\helpteachbot\main ubuntu:175.24.41.84:/usr/local
+我在本地cmd使用了命令：scp F:\helpteachbot\main ubuntu@175.24.41.84:/usr/local
 
 但这样给我报无权限错误，我查询资料发现可以转移到别的文件夹下，然后再mv过去
 
-所以我最后使用的命令是：scp F:\helpteachbot\main ubuntu:175.24.41.84:/tmp
+所以我最后使用的命令是：scp F:\helpteachbot\main ubuntu@175.24.41.84:/tmp
 
 至此我解决了go语言的环境
 
@@ -54,3 +54,14 @@ get是从浏览器上访问就行
 ShouldBindQuery(&json)//GET请求
 ShouldBind(&json)//POST请求
 
+## Day5
+非常zz的一天，在找究竟是什么导致QQ不能给我回复，多亏了学长的指导。。。
+[这个blog](https://blog.csdn.net/weixin_33889665/article/details/93166512)的步骤五
+最后成功的配置结果
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200307104733493.png)
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200307104845648.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0JsdWVfQ3VTTzQ=,size_16,color_FFFFFF,t_70)
+
+不过也不算是闲着了，大概码了一下层次二的代码，数据库打算用MongoDB，但还没下载下来
+
+## Day6
