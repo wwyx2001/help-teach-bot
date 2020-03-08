@@ -82,3 +82,8 @@ ShouldBind(&json)//POST请求
 [Golang MongoDB bson.M查询&修改](https://blog.csdn.net/LightUpHeaven/article/details/82663146)
 
 代码还差一个进阶，那就明天发好了。。。
+
+## Day7
+昨晚想了一下进阶定时提醒的做法：每隔1min就扫一下所有的仓库，如果达到了提前x小时的提前时间内，当时保存的时候多加一个参数表示每隔多少时间，时间过1min参数+1，当加到原数字的两倍的时候再提醒一次并变成原数字
+
+开工
