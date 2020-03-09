@@ -26,6 +26,11 @@ type QQgroupmessage struct{
 	Message   string  `json:"message"`
 }
 
+type QQimage struct{
+	File   string   `json:"file"`
+}
+
+var flag bool
 func Sendmessage(message string,number int){
 	client := &http.Client{}
 	msg := QQprivatemessage{
@@ -76,6 +81,31 @@ func Sendgroupmessage(message string,number int){
 	}
 }
 
+func Getimage(file string){
+	client := &http.Client{}
+	msg := QQimage{
+		File:  file,
+	}
+	fmt.Println(file)
+	Requestbody := new(bytes.Buffer)
+	err := json.NewEncoder(Requestbody).Encode(msg)
+	if err !=nil {
+		fmt.Println(err)
+		return
+	}
+	Request, err :=http.NewRequest("POST" , "http://175.24.41.84:5700/get_image" , Requestbody)
+	if err !=nil {
+		fmt.Println(err)
+		return
+	}
+	Request.Header.Set("Content-Type","application/json")
+	_, err = client.Do(Request)
+	if err !=nil {
+		fmt.Println(err)
+		return
+	}
+}
+
 type QQRequest struct{
 	PostType    string  `json:"post_type"`
 	RequestType string  `json:"request_type"`
@@ -94,6 +124,11 @@ func ReceivePost(ctx *gin.Context){
 	if err !=nil {
 		fmt.Println(err)
 		return
+	}
+	if flag == true{
+         Getimage(Request.File)
+		 Sendmessage("收到你的作业",Request.UserID)
+         flag=false
 	}
 	if Request.RequestType == "friend" {
 		AddFriend(Request,ctx)
@@ -147,6 +182,12 @@ func Handldgrouprequest(Request QQRequest){
 
 func Handldprivaterequest(Request QQRequest){
 	cur := Request.Message
+	flag = false
+	if cur == "提交作业"{
+		flag = true
+		Sendmessage("你可以发你的作业啦",Request.UserID)
+		return
+	}
 	if cur == "help" {
 		Sendmessage(Help, Request.UserID)
 		return
