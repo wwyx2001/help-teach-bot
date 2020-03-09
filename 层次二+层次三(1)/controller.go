@@ -13,6 +13,7 @@ import (
 
 const (
 	Help = "1.回复\"add,离散数学作业,2020-03-01 20:26:20,x,y\"即可添加一个名叫\"离散数学作业\"的任务，并且在提前x小时每隔y分钟提醒一次\n2.回复\"tasks\"即可列出自己的任务列表以及编号\n3.回复\"del,233\"即可删除编号为233的任务\n"
+	Homework = "今天的作业是练习一"
 )
 
 type QQprivatemessage struct{
@@ -84,6 +85,7 @@ type QQRequest struct{
 	Message     string  `json:"message"`
 	RawMessage  string  `json:"raw_message"`
 	Flag        string  `json:"flag"`
+	File        string  `json:"file"`
 }
 
 func ReceivePost(ctx *gin.Context){
@@ -137,8 +139,8 @@ func AddFriend(Request QQRequest, ctx *gin.Context){
 
 func Handldgrouprequest(Request QQRequest){
 	cur := Request.Message
-	if cur == "help" {
-		Sendgroupmessage(Help, Request.GroupID)
+	if cur == "作业" {
+		Sendgroupmessage(Homework, Request.GroupID)
 		return
 	}
 }
