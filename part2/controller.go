@@ -13,17 +13,48 @@ import (
 
 const (
 	Help = "1.回复\"add,离散数学作业,2020-03-01 20:26:20,x,y\"即可添加一个名叫\"离散数学作业\"的任务，并且在提前x小时每隔y分钟提醒一次\n2.回复\"tasks\"即可列出自己的任务列表以及编号\n3.回复\"del,233\"即可删除编号为233的任务\n"
+	Homework = "今天的作业是练习一"
 )
 
-type QQmessage struct{
-	UserID   int     `json:"user_id"`
-	Message  string  `json:"message"`
+type QQprivatemessage struct{
+	UserID    int     `json:"user_id"`
+	Message   string  `json:"message"`
+}
+
+type QQgroupmessage struct{
+	GroupID   int     `json:"group_id"`
+	Message   string  `json:"message"`
 }
 
 func Sendmessage(message string,number int){
 	client := &http.Client{}
-	msg := QQmessage{
+	msg := QQprivatemessage{
 		UserID:  number,
+		Message: message,
+	}
+	Requestbody := new(bytes.Buffer)
+	err := json.NewEncoder(Requestbody).Encode(msg)
+	if err !=nil {
+		fmt.Println(err)
+		return
+	}
+	Request, err :=http.NewRequest("POST" , "http://175.24.41.84:5700/send_msg" , Requestbody)
+	if err !=nil {
+		fmt.Println(err)
+		return
+	}
+	Request.Header.Set("Content-Type","application/json")
+	_, err = client.Do(Request)
+	if err !=nil {
+		fmt.Println(err)
+		return
+	}
+}
+
+func Sendgroupmessage(message string,number int){
+	client := &http.Client{}
+	msg := QQgroupmessage{
+		GroupID:  number,
 		Message: message,
 	}
 	Requestbody := new(bytes.Buffer)
@@ -50,8 +81,11 @@ type QQRequest struct{
 	RequestType string  `json:"request_type"`
 	MessageType string  `json:"message_type"`
 	UserID      int     `json:"user_id"`
+	GroupID     int     `json:"group_id"`
 	Message     string  `json:"message"`
+	RawMessage  string  `json:"raw_message"`
 	Flag        string  `json:"flag"`
+	File        string  `json:"file"`
 }
 
 func ReceivePost(ctx *gin.Context){
@@ -64,8 +98,11 @@ func ReceivePost(ctx *gin.Context){
 	if Request.RequestType == "friend" {
 		AddFriend(Request,ctx)
 	}
+	if Request.MessageType == "group" {
+		Handldgrouprequest(Request)
+	}
 	if Request.MessageType == "private" {
-		Handldrequest(Request)
+		Handldprivaterequest(Request)
 	}
 }
 
@@ -100,7 +137,15 @@ func AddFriend(Request QQRequest, ctx *gin.Context){
 	Sendmessage("初次见面，请回复\"help\"获取DDL提醒功能体验", Request.UserID)
 }
 
-func Handldrequest(Request QQRequest){
+func Handldgrouprequest(Request QQRequest){
+	cur := Request.Message
+	if cur == "作业" {
+		Sendgroupmessage(Homework, Request.GroupID)
+		return
+	}
+}
+
+func Handldprivaterequest(Request QQRequest){
 	cur := Request.Message
 	if cur == "help" {
 		Sendmessage(Help, Request.UserID)
@@ -151,9 +196,10 @@ func Handldrequest(Request QQRequest){
 			Sendmessage("亲，你还没有DDL呢", Request.UserID)
 			return
 		}
-		errr := model.DelDDL(Request.UserID, res[1])
-		if errr != nil{
-			fmt.Println(err)
+
+		err = model.DelDDL(Request.UserID, res[1])
+		if err != nil{
+			Sendmessage(err.Error(), Request.UserID)
 			return
 		}
 		Sendmessage("删除成功", Request.UserID)
@@ -193,7 +239,7 @@ func Calluser(UserID int){
 		}else {
 			continue
 		}
-		send = send +  u.Task + ",Stop At："+ u.ExpireTime + "\n" + "\n"
+		send = send +  u.Task + ",Stop At："+ u.ExpireTime + "\n"
 		cnt++
 	}
 	if cnt==0 {return}
